@@ -1,0 +1,11 @@
+services:
+  # Static site served by nginx → http://localhost:8080
+  web:
+    build:
+      context: .
+      target: production
+    image: vanessa-resume:latest
+    container_name: vanessa-resume
+    ports:
+      - "8080:80"
+    restart: unless-stopped
