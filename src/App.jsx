@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { SUGGESTIONS } from "./resumeData.js";
 import {
   SearchIcon,
   MicIcon,
@@ -35,13 +36,67 @@ const TopBar = () => {
 
 const App = () => {
   const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);        // suggestions dropdown open?
+  const [highlight, setHighlight] = useState(-1); // keyboard-highlighted suggestion
+  const wrapRef = useRef(null);
   const inputRef = useRef(null);
+
+  /* Suggestions filtered by what's typed */
+  const filtered = useMemo(() => {
+    const f = query.toLowerCase().trim();
+    if (!f) return SUGGESTIONS;
+    return SUGGESTIONS.filter((s) => s.q.toLowerCase().includes(f));
+  }, [query]);
 
   const runSearch = (q) => {
     const text = (q || "").trim();
     if (!text) return;
     setQuery(text);
+    setOpen(false);
+    setHighlight(-1);
   }
+
+  /* Keyboard nav in the search box */
+  const onKeyDown = (e) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setOpen(true);
+      setHighlight((h) => Math.min(h + 1, filtered.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlight((h) => Math.max(h - 1, 0));
+    } else if (e.key === "Enter") {
+      if (highlight >= 0 && filtered[highlight]) runSearch(filtered[highlight].q);
+      else runSearch(query);
+    } else if (e.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
+  /* Close dropdown on outside click */
+  useEffect(() => {
+    const onClick = (e) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
+
+  /* Render a suggestion label, bolding the part not yet typed */
+  const renderLabel = (text) => {
+    const f = query.toLowerCase().trim();
+    if (f && text.toLowerCase().startsWith(f)) {
+      return (
+        <>
+          {text.slice(0, f.length)}
+          <b className="font-medium">{text.slice(f.length)}</b>
+        </>
+      );
+    }
+    return <b className="font-medium">{text}</b>;
+  }
+
+  const comboOpen = open && filtered.length > 0;
 
   return (
     <>
@@ -55,8 +110,15 @@ const App = () => {
           </span>
         </div>
 
-        <div className="relative z-[5] w-full max-w-[584px] px-5">
-          <div className="flex h-[46px] items-center rounded-3xl border border-gborder bg-white px-3.5 transition hover:border-transparent hover:shadow-[0_1px_6px_rgba(32,33,36,.28)]">
+        <div className="relative z-[5] w-full max-w-[584px] px-5" ref={wrapRef}>
+          <div
+            className={
+              "flex h-[46px] items-center border bg-white px-3.5 transition " +
+              (comboOpen
+                ? "rounded-t-3xl border-transparent border-b-[#ececec] shadow-[0_1px_6px_rgba(32,33,36,.28)]"
+                : "rounded-3xl border-gborder hover:border-transparent hover:shadow-[0_1px_6px_rgba(32,33,36,.28)]")
+            }
+          >
             <span className="mr-3 flex text-[#9aa0a6]">
               <SearchIcon size={20} color="#9aa0a6" />
             </span>
@@ -68,8 +130,13 @@ const App = () => {
               placeholder="Search Vanessa or type a URL"
               aria-label="Search"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && runSearch(query)}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setOpen(true);
+                setHighlight(-1);
+              }}
+              onFocus={() => setOpen(true)}
+              onKeyDown={onKeyDown}
               className="h-full flex-1 border-none bg-transparent text-base text-gtext outline-none"
             />
             <div className="flex items-center gap-3.5">
@@ -84,6 +151,30 @@ const App = () => {
               </span>
             </div>
           </div>
+
+          {comboOpen && (
+            <div className="absolute inset-x-5 z-[4] rounded-b-3xl border border-t-0 border-gborder bg-white pb-2.5 pt-1.5 shadow-[0_4px_6px_rgba(32,33,36,.28)]">
+              {filtered.map((s, i) => (
+                <div
+                  key={s.q}
+                  className={
+                    "flex cursor-pointer items-center gap-3.5 px-[18px] py-[7px] text-base text-gtext " +
+                    (i === highlight ? "bg-ghover" : "hover:bg-ghover")
+                  }
+                  onMouseEnter={() => setHighlight(i)}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    runSearch(s.q);
+                  }}
+                >
+                  <span className="flex w-5 text-[#9aa0a6]">
+                    <SearchIcon size={18} color="#9aa0a6" />
+                  </span>
+                  <span className="flex-1">{renderLabel(s.q)}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="mt-7 flex gap-3">
