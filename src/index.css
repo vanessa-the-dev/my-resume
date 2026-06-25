@@ -2,6 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  /* Circular brand avatar — size & text size set per use */
+  .g-avatar {
+    @apply flex items-center justify-center rounded-full bg-[#0b5345] font-medium text-white;
+  }
+
+  /* Source line above a result (site name + url) */
+  .g-source {
+    @apply mb-[3px] flex items-center gap-[9px];
+  }
+  .g-source-name {
+    @apply text-sm leading-tight text-gtext;
+  }
+  .g-source-url {
+    @apply text-xs leading-tight text-gresult;
+  }
+
+  /* Result building blocks */
+  .g-card {
+    @apply mb-7 max-w-[600px];
+  }
+  .g-title {
+    @apply m-0 mb-0.5 cursor-pointer text-xl font-normal leading-tight text-glink hover:underline;
+  }
+  .g-snippet {
+    @apply text-sm leading-[1.58] text-gresult;
+  }
+  .g-bullets {
+    @apply mt-2 list-disc pl-[18px];
+  }
+
+  /* Inline blue link */
+  .g-link {
+    @apply text-glink hover:underline;
+  }
+
+  /* Search box container + trailing clickable icon */
+  .g-searchbox {
+    @apply flex items-center border bg-white px-3.5 transition;
+  }
+  .g-trail-icon {
+    @apply flex cursor-pointer;
+  }
+
+  /* Home-page pill button */
+  .g-btn {
+    @apply h-9 cursor-pointer rounded border border-ghover bg-ghover px-4 text-sm text-[#3c4043] hover:border-[#dadce0] hover:shadow-sm;
+  }
+}
+
 html,
 body,
 #root {
