@@ -13,10 +13,9 @@ const ResultsView = ({ query, submittedQuery, onQueryChange, onSearch, onHome })
 
   return (
     <>
-      <TopBar onImagesClick={() => setPhotoOpen(true)} />
       <PhotoModal open={isPhotoOpen} onClose={() => setPhotoOpen(false)} />
 
-    <header className="border-b border-[#ebebeb]">
+      <header className="border-b border-[#ebebeb]">
       <div className="flex flex-wrap items-center gap-[22px] pl-7 pr-5 pt-[18px]">
         <button
           type="button"
@@ -44,6 +43,10 @@ const ResultsView = ({ query, submittedQuery, onQueryChange, onSearch, onHome })
               <SearchIcon size={20} color="#4285F4" />
             </button>
           </SearchField>
+        </div>
+
+        <div className="ml-auto">
+          <TopBar onImagesClick={() => setPhotoOpen(true)} />
         </div>
       </div>
 
