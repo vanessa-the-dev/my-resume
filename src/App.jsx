@@ -9,13 +9,22 @@ import {
   Wordmark,
 } from "./components/icons.jsx";
 
-const TopBar = () => {
+import vanessa from './assets/images/vanessa.jfif';
+
+const TopBar = ({ onImagesClick }) => {
   return (
     <div className="flex h-[60px] items-center justify-end gap-4 px-4 text-[13px]">
       <a href="#" onClick={(e) => e.preventDefault()} className="text-black hover:underline">
         Gmail
       </a>
-      <a href="#" onClick={(e) => e.preventDefault()} className="text-black hover:underline">
+      <a
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+          onImagesClick();
+        }}
+        className="text-black hover:underline"
+      >
         Images
       </a>
       <div
@@ -36,8 +45,9 @@ const TopBar = () => {
 
 const App = () => {
   const [query, setQuery] = useState("");
-  const [open, setOpen] = useState(false);        // suggestions dropdown open?
-  const [highlight, setHighlight] = useState(-1); // keyboard-highlighted suggestion
+  const [open, setOpen] = useState(false);           // suggestions dropdown open?
+  const [photoOpen, setPhotoOpen] = useState(false); // photo modal open?
+  const [highlight, setHighlight] = useState(-1);    // keyboard-highlighted suggestion
   const wrapRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -82,6 +92,16 @@ const App = () => {
     return () => document.removeEventListener("click", onClick);
   }, []);
 
+  /* Close the photo modal on Escape */
+  useEffect(() => {
+    if (!photoOpen) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") setPhotoOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [photoOpen]);
+
   /* Render a suggestion label, bolding the part not yet typed */
   const renderLabel = (text) => {
     const f = query.toLowerCase().trim();
@@ -100,7 +120,32 @@ const App = () => {
 
   return (
     <>
-      <TopBar />
+      <TopBar onImagesClick={() => setPhotoOpen(true)} />
+
+      {photoOpen && (
+        <div
+          className="fixed inset-0 z-[50] flex items-center justify-center bg-black/70 p-6"
+          onClick={() => setPhotoOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Vanessa photo"
+        >
+          <div className="relative" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setPhotoOpen(false)}
+              aria-label="Close"
+              className="absolute -right-3 -top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white text-xl leading-none text-gtext shadow-md hover:bg-ghover"
+            >
+              ×
+            </button>
+            <img
+              src={vanessa}
+              alt="Vanessa"
+              className="max-h-[80vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
+            />
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-col items-center mt-[9vh]">
         <div className="mb-6 select-none text-center text-[92px] font-medium tracking-[-5px]">
