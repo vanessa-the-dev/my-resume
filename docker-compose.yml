@@ -1,5 +1,5 @@
 services:
-  # Production build served by nginx → http://localhost:8080
+  # Production build served by nginx → http://localhost:8082
   web:
     build:
       context: .
@@ -7,13 +7,13 @@ services:
     image: vanessa-resume:latest
     container_name: vanessa-resume
     ports:
-      - "8080:80"
+      - "8082:80"
     restart: unless-stopped
 
   # Optional dev server with hot-reload → http://localhost:5173
   # Start with:  docker compose --profile dev up dev
   dev:
-    image: node:20-alpine
+    image: node:24-alpine
     container_name: vanessa-resume-dev
     profiles: ["dev"]
     working_dir: /app
