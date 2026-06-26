@@ -18,8 +18,12 @@ services:
     profiles: ["dev"]
     working_dir: /app
     command: sh -c "npm install && npm run dev"
+    environment:
+      # Windows host bind mounts don't forward file-change events into the
+      # Linux container, so tell Vite's watcher (chokidar) to poll instead.
+      - CHOKIDAR_USEPOLLING=true
     ports:
-      - "5173:5173"
+      - "5176:5173"
     volumes:
       - .:/app
       - /app/node_modules
