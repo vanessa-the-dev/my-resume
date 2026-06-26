@@ -12,9 +12,6 @@ import { SearchIcon } from "./icons.jsx";
  */
 const SearchField = ({ className = "", iconSize = 20, inputRef, inputProps, onSubmit, children }) => (
   <form role="search" onSubmit={onSubmit} className={`g-searchbox ${className}`}>
-    <span className="mr-3 flex text-[#9aa0a6]">
-      <SearchIcon size={iconSize} color="#9aa0a6" />
-    </span>
     <input
       ref={inputRef}
       type="text"

@@ -29,7 +29,7 @@ const ResultsView = ({ query, submittedQuery, onQueryChange, onSearch, onHome })
 
         <div className="min-w-[200px] max-w-[640px] flex-1">
           <SearchField
-            className="h-11 rounded-3xl border-transparent shadow-[0_1px_6px_rgba(32,33,36,.18)]"
+            className="h-11 pl-[25px] rounded-3xl border-transparent shadow-[0_1px_6px_rgba(32,33,36,.18)]"
             iconSize={18}
             onSubmit={(event) => {
               event.preventDefault();
