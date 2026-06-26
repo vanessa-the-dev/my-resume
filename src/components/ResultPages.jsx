@@ -54,51 +54,56 @@ const Layout = ({ children, panel }) => (
   </div>
 );
 
-/* ---- About / "who is Vanessa Isidro?" ---- */
-const AboutPage = ({ search, panel }) => {
+/* ---- About result card (shared by the About page and the All feed) ---- */
+const AboutResult = ({ search }) => {
   const sublink = "g-link cursor-pointer text-base";
   return (
-    <Layout panel={panel}>
-      <Stats>About 1 dedicated result (0.42 seconds)</Stats>
-
-      <ResultBlock
-        url={ABOUT.url}
-        title={`Who is ${RESUME.name}? — About`}
-        onTitleClick={() => search("Vanessa Isidro work experience")}
-      >
-        <div className="g-snippet">
-          <span className="text-ggrey">Profile · </span>
-          {RESUME.name} is a <b className="font-medium">{RESUME.tagline}</b> based in{" "}
-          {RESUME.location} who {ABOUT.bio}
-        </div>
-        <div className="mt-3 grid grid-cols-2 gap-x-10 gap-y-1">
-          {ABOUT.links.map((l) => (
-            <div key={l.q}>
-              <a className={sublink} onClick={() => search(l.q)}>
-                {l.label}
-              </a>
-              <div className="text-[13px] text-gresult">{l.desc}</div>
-            </div>
-          ))}
-        </div>
-      </ResultBlock>
-
-      <div className="mb-7 max-w-[600px] overflow-hidden rounded-[10px] border border-[#ebebeb]">
-        <h2 className="m-0 px-[18px] pb-1.5 pt-4 text-xl font-normal">People also ask</h2>
-        {ABOUT.faq.map((item) => (
-          <div
-            key={item.q}
-            onClick={() => search(item.q)}
-            className="flex cursor-pointer items-center justify-between border-t border-[#ebebeb] px-[18px] py-3.5 text-[15px] text-gresult hover:bg-ghover"
-          >
-            <span>{item.label}</span>
-            <span className="text-ggrey">▾</span>
+    <ResultBlock
+      url={ABOUT.url}
+      title={`Who is ${RESUME.name}? — About`}
+      onTitleClick={() => search("Vanessa Isidro work experience")}
+    >
+      <div className="g-snippet">
+        <span className="text-ggrey">Profile · </span>
+        {RESUME.name} is a <b className="font-medium">{RESUME.tagline}</b> based in{" "}
+        {RESUME.location} who {ABOUT.bio}
+      </div>
+      <div className="mt-3 grid grid-cols-2 gap-x-10 gap-y-1">
+        {ABOUT.links.map((l) => (
+          <div key={l.q}>
+            <a className={sublink} onClick={() => search(l.q)}>
+              {l.label}
+            </a>
+            <div className="text-[13px] text-gresult">{l.desc}</div>
           </div>
         ))}
       </div>
-    </Layout>
+    </ResultBlock>
   );
 };
+
+/* ---- About / "who is Vanessa Isidro?" ---- */
+const AboutPage = ({ search, panel }) => (
+  <Layout panel={panel}>
+    <Stats>About 1 dedicated result (0.42 seconds)</Stats>
+
+    <AboutResult search={search} />
+
+    <div className="mb-7 max-w-[600px] overflow-hidden rounded-[10px] border border-[#ebebeb]">
+      <h2 className="m-0 px-[18px] pb-1.5 pt-4 text-xl font-normal">People also ask</h2>
+      {ABOUT.faq.map((item) => (
+        <div
+          key={item.q}
+          onClick={() => search(item.q)}
+          className="flex cursor-pointer items-center justify-between border-t border-[#ebebeb] px-[18px] py-3.5 text-[15px] text-gresult hover:bg-ghover"
+        >
+          <span>{item.label}</span>
+          <span className="text-ggrey">▾</span>
+        </div>
+      ))}
+    </div>
+  </Layout>
+);
 
 /* ---- Generic list page (work / education / projects) ---- */
 const ListPage = ({ stats, items, search, panel, query }) => (
@@ -110,51 +115,82 @@ const ListPage = ({ stats, items, search, panel, query }) => (
   </Layout>
 );
 
+/* ---- Skills result card (shared by the Skills page and the All feed) ---- */
+const SkillsResult = () => (
+  <ResultBlock url={SKILLS.url} title={SKILLS.title}>
+    <div className="g-snippet">
+      {SKILLS.intro}
+      <ul className="g-bullets">
+        {SKILLS.groups.map((g) => (
+          <li key={g.label} className="mb-1">
+            <b className="font-medium">{g.label}:</b> {g.items}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </ResultBlock>
+);
+
 /* ---- Skills ---- */
-const SkillsPage = ({ panel }) => {
-  return (
-    <Layout panel={panel}>
-      <Stats>About 1 result (0.19 seconds)</Stats>
-      <ResultBlock url={SKILLS.url} title={SKILLS.title}>
-        <div className="g-snippet">
-          {SKILLS.intro}
-          <ul className="g-bullets">
-            {SKILLS.groups.map((g) => (
-              <li key={g.label} className="mb-1">
-                <b className="font-medium">{g.label}:</b> {g.items}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </ResultBlock>
-    </Layout>
-  );
-};
+const SkillsPage = ({ panel }) => (
+  <Layout panel={panel}>
+    <Stats>About 1 result (0.19 seconds)</Stats>
+    <SkillsResult />
+  </Layout>
+);
+
+/* ---- Contact result card (shared by the Contact page and the All feed) ---- */
+const ContactResult = () => (
+  <ResultBlock url={CONTACT.url} title={CONTACT.title}>
+    <div className="g-snippet">
+      {CONTACT.intro}
+      <ul className="g-bullets">
+        {CONTACT.items.map((c) => (
+          <li key={c.label} className="mb-1">
+            <b className="font-medium">{c.label}:</b>{" "}
+            {c.href ? (
+              <a href={c.href} className="g-link">
+                {c.value}
+              </a>
+            ) : (
+              c.value
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </ResultBlock>
+);
 
 /* ---- Contact ---- */
-const ContactPage = ({ panel }) => {
+const ContactPage = ({ panel }) => (
+  <Layout panel={panel}>
+    <Stats>About 1 result (0.11 seconds)</Stats>
+    <ContactResult />
+  </Layout>
+);
+
+/* ---- All: every section combined into one feed ---- */
+const AllPage = ({ search, panel }) => {
+  const total = 1 + WORK.length + EDUCATION.length + PROJECTS.length + 2;
   return (
     <Layout panel={panel}>
-      <Stats>About 1 result (0.11 seconds)</Stats>
-      <ResultBlock url={CONTACT.url} title={CONTACT.title}>
-        <div className="g-snippet">
-          {CONTACT.intro}
-          <ul className="g-bullets">
-            {CONTACT.items.map((c) => (
-              <li key={c.label} className="mb-1">
-                <b className="font-medium">{c.label}:</b>{" "}
-                {c.href ? (
-                  <a href={c.href} className="g-link">
-                    {c.value}
-                  </a>
-                ) : (
-                  c.value
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </ResultBlock>
+      <Stats>About {total} results (0.46 seconds)</Stats>
+
+      <AboutResult search={search} />
+
+      {WORK.map((item, i) => (
+        <ResultCard key={`work-${i}`} item={item} onTitleClick={() => search("Vanessa Isidro work experience")} />
+      ))}
+      {EDUCATION.map((item, i) => (
+        <ResultCard key={`edu-${i}`} item={item} onTitleClick={() => search("Vanessa Isidro academic experience")} />
+      ))}
+      {PROJECTS.map((item, i) => (
+        <ResultCard key={`proj-${i}`} item={item} onTitleClick={() => search("Vanessa Isidro projects")} />
+      ))}
+
+      <SkillsResult />
+      <ContactResult />
     </Layout>
   );
 };
@@ -197,6 +233,8 @@ const ResultPages = ({ pageKey, search, panel = null }) => {
       return <SkillsPage panel={panel} />;
     case "contact":
       return <ContactPage panel={panel} />;
+    case "all":
+      return <AllPage search={search} panel={panel} />;
     case "about":
     default:
       return <AboutPage search={search} panel={panel} />;

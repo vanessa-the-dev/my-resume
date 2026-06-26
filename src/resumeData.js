@@ -10,6 +10,9 @@ export const RESUME = {
 /* The query run by the home-page action buttons */
 export const DEFAULT_QUERY = "who is Vanessa Isidro?";
 
+/* The query behind the "All" tab — a bare-name search that shows every section */
+export const ALL_QUERY = "Vanessa Isidro";
+
 /* Suggestions shown in the search dropdown */
 export const SUGGESTIONS = [
   { q: "who is Vanessa Isidro?", key: "about" },
@@ -20,9 +23,9 @@ export const SUGGESTIONS = [
   { q: "Vanessa Isidro contact", key: "contact" },
 ];
 
-/* Result-page navigation tabs. The first (no `q`) marks the current results. */
+/* Result-page navigation tabs. "All" shows every section combined. */
 export const SEARCH_TABS = [
-  { icon: "🔎", label: "All" },
+  { icon: "🔎", label: "All", q: ALL_QUERY },
   { icon: "👤", label: "About", q: "who is Vanessa Isidro?" },
   { icon: "💼", label: "Work", q: "Vanessa Isidro work experience" },
   { icon: "🎓", label: "Education", q: "Vanessa Isidro academic experience" },
@@ -161,5 +164,8 @@ export const keyForQuery = (q) => {
   if (/skill|tech|tool|stack/.test(s)) return "skills";
   if (/project|portfolio|github|built/.test(s)) return "projects";
   if (/contact|email|reach|hire|linkedin/.test(s)) return "contact";
-  return "about"; // default: "who is Vanessa"
+  if (/who|about|profile|bio/.test(s)) return "about";
+  // A bare-name / "everything" search shows the combined "All" feed.
+  if (/everything|overview|^all$|^vanessa( nellyn)?( isidro)?$/.test(s.trim())) return "all";
+  return "about";
 };

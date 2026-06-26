@@ -10,6 +10,7 @@ import { SearchIcon, Wordmark } from "./icons.jsx";
 
 const ResultsView = ({ query, submittedQuery, onQueryChange, onSearch, onHome }) => {
   const [isPhotoOpen, setPhotoOpen] = useState(false);
+  const activePage = keyForQuery(submittedQuery);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -50,11 +51,11 @@ const ResultsView = ({ query, submittedQuery, onQueryChange, onSearch, onHome })
         </div>
       </div>
 
-      <SearchTabs onSelect={onSearch} />
+      <SearchTabs activePage={activePage} onSelect={onSearch} />
     </header>
 
     <main className="flex-1 px-5 pb-16 pt-5 md:pl-[170px]">
-      <ResultPages pageKey={keyForQuery(submittedQuery)} search={onSearch} />
+      <ResultPages pageKey={activePage} search={onSearch} />
     </main>
 
     <Footer />
