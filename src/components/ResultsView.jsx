@@ -12,7 +12,7 @@ const ResultsView = ({ query, submittedQuery, onQueryChange, onSearch, onHome })
   const [isPhotoOpen, setPhotoOpen] = useState(false);
 
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       <PhotoModal open={isPhotoOpen} onClose={() => setPhotoOpen(false)} />
 
       <header className="border-b border-[#ebebeb]">
@@ -53,12 +53,12 @@ const ResultsView = ({ query, submittedQuery, onQueryChange, onSearch, onHome })
       <SearchTabs onSelect={onSearch} />
     </header>
 
-    <main className="px-5 pb-16 pt-5 md:pl-[170px]">
+    <main className="flex-1 px-5 pb-16 pt-5 md:pl-[170px]">
       <ResultPages pageKey={keyForQuery(submittedQuery)} search={onSearch} />
     </main>
 
     <Footer />
-    </>
+    </div>
   );
 };
 
