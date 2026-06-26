@@ -6,7 +6,7 @@ import SearchField from "./SearchField.jsx";
 import SearchSuggestions from "./SearchSuggestions.jsx";
 import { MicIcon, LensIcon, SparkleIcon, Wordmark } from "./icons.jsx";
 
-const HERO_SUBTITLE = "An interactive résumé · type or pick a suggestion below";
+const HERO_SUBTITLE = "An interactive résumé made by a developer who probably should've been sleeping.";
 
 const HomeView = ({ query, onQueryChange, onSearch }) => {
   const [isPhotoOpen, setPhotoOpen] = useState(false);
