@@ -46,22 +46,24 @@ const Stats = ({ children }) => (
   <div className="mb-[22px] text-[13px] text-ggrey">{children}</div>
 );
 
-/** Wraps the results column and an optional right-hand panel */
+/** Wraps the results column and an optional right-hand panel.
+ *  The results column is capped (not flex-1) so the panel sits right
+ *  beside it rather than being pushed to the far right edge. */
 const Layout = ({ children, panel }) => (
   <div className="flex items-start gap-10">
-    <div className="min-w-0 flex-1">{children}</div>
+    <div className="min-w-0 w-full max-w-[600px]">{children}</div>
     {panel}
   </div>
 );
 
 /* ---- About result card (shared by the About page and the All feed) ---- */
-const AboutResult = ({ search }) => {
+const AboutResult = ({ search, onTitleClick }) => {
   const sublink = "g-link cursor-pointer text-base";
   return (
     <ResultBlock
       url={ABOUT.url}
       title={`Who is ${RESUME.name}? — About`}
-      onTitleClick={() => search("Vanessa Isidro work experience")}
+      onTitleClick={onTitleClick}
     >
       <div className="g-snippet">
         <span className="text-ggrey">Profile · </span>
@@ -83,11 +85,11 @@ const AboutResult = ({ search }) => {
 };
 
 /* ---- About / "who is Vanessa Isidro?" ---- */
-const AboutPage = ({ search, panel }) => (
+const AboutPage = ({ search, panel, onAboutOpen }) => (
   <Layout panel={panel}>
     <Stats>About 1 dedicated result (0.42 seconds)</Stats>
 
-    <AboutResult search={search} />
+    <AboutResult search={search} onTitleClick={onAboutOpen} />
 
     <div className="mb-7 max-w-[600px] overflow-hidden rounded-[10px] border border-[#ebebeb]">
       <h2 className="m-0 px-[18px] pb-1.5 pt-4 text-xl font-normal">People also ask</h2>
@@ -171,13 +173,13 @@ const ContactPage = ({ panel }) => (
 );
 
 /* ---- All: every section combined into one feed ---- */
-const AllPage = ({ search, panel }) => {
+const AllPage = ({ search, panel, onAboutOpen }) => {
   const total = 1 + WORK.length + EDUCATION.length + PROJECTS.length + 2;
   return (
     <Layout panel={panel}>
       <Stats>About {total} results (0.46 seconds)</Stats>
 
-      <AboutResult search={search} />
+      <AboutResult search={search} onTitleClick={onAboutOpen} />
 
       {WORK.map((item, i) => (
         <ResultCard key={`work-${i}`} item={item} onTitleClick={() => search("Vanessa Isidro work experience")} />
@@ -197,7 +199,7 @@ const AllPage = ({ search, panel }) => {
 
 /** Router: pick the page component for a given key.
  *  `panel` is an optional right-hand element (the knowledge panel). */
-const ResultPages = ({ pageKey, search, panel = null }) => {
+const ResultPages = ({ pageKey, search, panel = null, onAboutOpen }) => {
   switch (pageKey) {
     case "work":
       return (
@@ -234,10 +236,10 @@ const ResultPages = ({ pageKey, search, panel = null }) => {
     case "contact":
       return <ContactPage panel={panel} />;
     case "all":
-      return <AllPage search={search} panel={panel} />;
+      return <AllPage search={search} panel={panel} onAboutOpen={onAboutOpen} />;
     case "about":
     default:
-      return <AboutPage search={search} panel={panel} />;
+      return <AboutPage search={search} panel={panel} onAboutOpen={onAboutOpen} />;
   }
 };
 

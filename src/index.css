@@ -5,7 +5,7 @@
 @layer components {
   /* Circular brand avatar — size & text size set per use */
   .g-avatar {
-    @apply flex items-center justify-center rounded-full bg-[#0b5345] font-medium text-white;
+    @apply flex items-center justify-center rounded-full bg-gbrand font-medium text-white;
   }
 
   /* Source line above a result (site name + url) */

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { keyForQuery } from "../resumeData.js";
 import TopBar from "./TopBar.jsx";
 import PhotoModal from "./PhotoModal.jsx";
+import AboutPanel from "./AboutPanel.jsx";
 import Footer from "./Footer.jsx";
 import SearchField from "./SearchField.jsx";
 import SearchTabs from "./SearchTabs.jsx";
@@ -10,7 +11,11 @@ import { SearchIcon, Wordmark } from "./icons.jsx";
 
 const ResultsView = ({ query, submittedQuery, onQueryChange, onSearch, onHome }) => {
   const [isPhotoOpen, setPhotoOpen] = useState(false);
+  const [isAboutOpen, setAboutOpen] = useState(false);
   const activePage = keyForQuery(submittedQuery);
+
+  // Close the about panel whenever the user navigates to a new query.
+  useEffect(() => setAboutOpen(false), [submittedQuery]);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -55,7 +60,12 @@ const ResultsView = ({ query, submittedQuery, onQueryChange, onSearch, onHome })
     </header>
 
     <main className="flex-1 px-5 pb-16 pt-5 md:pl-[170px]">
-      <ResultPages pageKey={activePage} search={onSearch} />
+      <ResultPages
+        pageKey={activePage}
+        search={onSearch}
+        onAboutOpen={() => setAboutOpen((open) => !open)}
+        panel={isAboutOpen ? <AboutPanel onClose={() => setAboutOpen(false)} /> : null}
+      />
     </main>
 
     <Footer />
